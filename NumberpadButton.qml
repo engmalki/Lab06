@@ -5,8 +5,11 @@ Item {
     width: 90
     height: 90
     property string number
+    signal clickSignal(string number)
+
     Button {
         id: button
+        onClicked: parent.clickSignal(number)
 
         anchors.fill: parent
         text: number;
