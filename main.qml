@@ -22,6 +22,7 @@ Window {
             }
             onEnterPressed: {
                 console.log("Enter")
+                dashboard.startProgramming()
             }
         }
 

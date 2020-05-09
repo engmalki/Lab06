@@ -9,6 +9,7 @@ Item {
 
 
     function startUnlocking (){
+
         priv.inputIndex=0;
         priv.unlocked=false;
     }
@@ -19,31 +20,56 @@ Item {
         priv.unlocked=false;
     }
 
-
-
-function numberInput(number)
-{
-    if (priv.inputIndex<0){
-        return;
-    }
-    else{
-        if (number !== priv.passcode[priv.inputIndex])
+    function startProgramming(){
+        if (priv.unlocked){
+        priv.programming=true;
+        priv.inputIndex=0;
+        }
+        else
         {
             lock();
-            return;
-        }
-        else {
-            if (priv.inputIndex==3)
-            {
-                priv.unlock();
-            }
-            else{
-                priv.inputIndex++;
-            }
         }
     }
 
-}
+    function numberInput(number)
+    {
+        if (priv.inputIndex<0){
+            return;
+        }
+        if (priv.programming){
+                priv.newPasscode[priv.inputIndex]=number;
+            }
+        else{
+            if (number !== priv.passcode[priv.inputIndex])
+            {
+                lock();
+                return;
+            }
+        }
+
+                if (priv.inputIndex==3)
+                {
+                    if (priv.programming)
+                    {
+                        for (var i=0;i<4;i++)
+                        {
+                            priv.passcode[i]=priv.newPasscode[i];
+
+                        }
+                        lock();
+                        return;
+                    }
+                    else
+                    {
+                        priv.unlock();
+                    }
+                }
+                else{
+                    priv.inputIndex++;
+                }
+
+
+    }
 
 QtObject{
     id:priv
@@ -51,6 +77,11 @@ QtObject{
     property int inputIndex: -1 //-1 refer to no number was entered
     property bool unlocked: false
     property bool programming: false
+    property variant newPasscode: [1,2,3,4]
+    onUnlockedChanged: {
+        programming =false;
+    }
+
     function unlock(){
         unlocked=true;
         }
